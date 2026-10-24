@@ -16,6 +16,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Alias : @/ désigne le dossier src */
+    "paths": { "@/*": ["./src/*"] },
+
     /* Vérifications */
     "strict": true,
     "noUnusedLocals": true,

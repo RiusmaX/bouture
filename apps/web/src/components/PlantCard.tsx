@@ -1,7 +1,9 @@
-import { formatPrice } from '../format.ts';
-import type { Plant } from '../types.ts';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { categoryLabels } from '@/categories';
+import { formatPrice } from '@/format';
+import type { Plant } from '@/types';
 
-// Les props sont typées : le composant refuse un végétal incomplet
 interface PlantCardProps {
   plant: Plant;
 }
@@ -10,18 +12,25 @@ export function PlantCard({ plant }: PlantCardProps) {
   const outOfStock = plant.stock === 0;
 
   return (
-    <article className="plant-card">
-      <h2>{plant.name}</h2>
-      <p className="latin">{plant.latinName}</p>
-      <p>
-        {formatPrice(plant.priceCents)} · pot {plant.potSize}
-      </p>
-      {/* Rendu conditionnel : l'un ou l'autre selon le stock */}
-      {outOfStock ? (
-        <p className="badge badge-out">Rupture</p>
-      ) : (
-        <p className="badge">{plant.stock} en stock</p>
-      )}
-    </article>
+    <Card>
+      <CardHeader>
+        <CardTitle>{plant.name}</CardTitle>
+        <CardDescription className="italic">{plant.latinName}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-3">
+        <p className="text-sm">
+          <span className="text-lg font-semibold">{formatPrice(plant.priceCents)}</span> · pot{' '}
+          {plant.potSize}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <Badge variant="secondary">{categoryLabels[plant.category]}</Badge>
+          {outOfStock ? (
+            <Badge className="bg-warning-soft text-warning">Rupture</Badge>
+          ) : (
+            <Badge variant="outline">{plant.stock} en stock</Badge>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 }

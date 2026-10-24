@@ -1,14 +1,14 @@
-import type { Plant } from '../types.ts';
-import { PlantCard } from './PlantCard.tsx';
+import type { Plant } from '@/types';
+import { PlantCard } from './PlantCard';
 
 export function PlantGrid({ plants }: { plants: Plant[] }) {
   if (plants.length === 0) {
-    return <p>Aucun végétal ne correspond à la recherche.</p>;
+    return <p className="text-muted-foreground">Aucun végétal ne correspond à la recherche.</p>;
   }
 
   return (
-    <div className="plant-grid">
-      {/* key permet à React de suivre chaque carte d'un rendu à l'autre */}
+    // Grille responsive : 1 colonne sur mobile, jusqu'à 4 sur grand écran
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {plants.map((plant) => (
         <PlantCard key={plant.id} plant={plant} />
       ))}

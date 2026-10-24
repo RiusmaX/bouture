@@ -1,4 +1,4 @@
-import type { Category } from './types.ts';
+import type { Category } from '@/types';
 
 // Libellés français des catégories : Record oblige à n'en oublier aucune
 export const categoryLabels: Record<Category, string> = {

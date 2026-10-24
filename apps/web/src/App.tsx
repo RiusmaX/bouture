@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { CategorySelect } from './components/CategorySelect.tsx';
-import { PlantGrid } from './components/PlantGrid.tsx';
-import { SearchInput } from './components/SearchInput.tsx';
-import { useDebouncedValue } from './hooks/useDebouncedValue.ts';
-import { useDocumentTitle } from './hooks/useDocumentTitle.ts';
-import plantsJson from './data/plants.json';
-import type { Category, Plant } from './types.ts';
+import { CategorySelect } from '@/components/CategorySelect';
+import { PlantGrid } from '@/components/PlantGrid';
+import { SearchInput } from '@/components/SearchInput';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { useDebouncedValue } from '@/hooks/useDebouncedValue';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import plantsJson from '@/data/plants.json';
+import type { Category, Plant } from '@/types';
 
 // Données locales pour apprendre React ; elles viendront de l'API au TD 12
 const plants = plantsJson as Plant[];
@@ -33,22 +35,21 @@ export default function App() {
   );
 
   return (
-    <main>
-      <h1>Catalogue</h1>
-      <div className="filters">
+    <main className="mx-auto flex max-w-6xl flex-col gap-6 p-6">
+      <h1 className="text-3xl font-semibold text-primary">Catalogue</h1>
+      <div className="flex flex-wrap items-center gap-4">
         <SearchInput value={search} onChange={setSearch} />
         <CategorySelect value={category} onChange={setCategory} />
-        {/* Bonus du TP 3 : seulement les végétaux disponibles */}
-        <label>
-          <input
-            type="checkbox"
+        <div className="flex items-center gap-2">
+          <Checkbox
+            id="in-stock"
             checked={inStockOnly}
-            onChange={(event) => setInStockOnly(event.target.checked)}
-          />{' '}
-          En stock seulement
-        </label>
+            onCheckedChange={(checked) => setInStockOnly(checked === true)}
+          />
+          <Label htmlFor="in-stock">En stock seulement</Label>
+        </div>
       </div>
-      <p>
+      <p className="text-sm text-muted-foreground">
         {visible.length} {visible.length > 1 ? 'végétaux' : 'végétal'}
       </p>
       <PlantGrid plants={visible} />

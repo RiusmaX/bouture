@@ -24,4 +24,9 @@ export default tseslint.config(
     languageOptions: { globals: globals.browser },
     extends: [reactHooks.configs.flat.recommended, reactRefresh.configs.vite],
   },
+  // Composants copiés par shadcn/ui : ils exportent aussi leurs variantes (buttonVariants…)
+  {
+    files: ['apps/web/src/components/ui/**'],
+    rules: { 'react-refresh/only-export-components': 'off' },
+  },
 );

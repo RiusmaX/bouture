@@ -1,65 +1,108 @@
-/* Styles globaux, remplacés par Tailwind CSS au TD 10 */
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
-  color: #1f2a1f;
-  background: #f7f8f5;
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@fontsource-variable/geist';
+
+/*
+ * Trois étages de tokens :
+ * 1. les tokens de marque (design/tokens.json, issus de Figma) : --leaf-700, --sand-50… ;
+ * 2. les tokens sémantiques, qui disent à quoi sert une couleur : --primary, --background… ;
+ * 3. le thème Tailwind (@theme), qui crée les classes bg-primary, text-muted-foreground…
+ * Les composants n'utilisent que les étages 2 et 3 : changer la marque ne touche aucun composant.
+ */
+
+:root {
+  /* 1. Marque */
+  --leaf-50: #eef5ec;
+  --leaf-100: #d8e8d3;
+  --leaf-600: #3d7f47;
+  --leaf-700: #2f6b3a;
+  --leaf-900: #1c3f23;
+  --terracotta-100: #f6e3da;
+  --terracotta-600: #b4532a;
+  --sand-50: #fbfaf6;
+  --sand-100: #f3f1ea;
+  --sand-300: #dcd8cc;
+  --ink-500: #5c665a;
+  --ink-900: #1f2a1f;
+  --danger-600: #b42318;
+
+  /* 2. Sémantique (noms attendus par les composants shadcn/ui) */
+  --background: var(--sand-50);
+  --foreground: var(--ink-900);
+  --card: #ffffff;
+  --card-foreground: var(--ink-900);
+  --popover: #ffffff;
+  --popover-foreground: var(--ink-900);
+  --primary: var(--leaf-700);
+  --primary-foreground: #ffffff;
+  --secondary: var(--leaf-50);
+  --secondary-foreground: var(--leaf-900);
+  --muted: var(--sand-100);
+  --muted-foreground: var(--ink-500);
+  --accent: var(--leaf-100);
+  --accent-foreground: var(--leaf-900);
+  --destructive: var(--danger-600);
+  --border: var(--sand-300);
+  --input: var(--sand-300);
+  --ring: var(--leaf-600);
+  --radius: 0.5rem;
+  --sidebar: var(--leaf-900);
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: var(--leaf-100);
+  --sidebar-primary-foreground: var(--leaf-900);
+  --sidebar-accent: var(--leaf-700);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: var(--leaf-700);
+  --sidebar-ring: var(--leaf-100);
+  /* Propres à Bouture : la rupture de stock */
+  --warning: var(--terracotta-600);
+  --warning-soft: var(--terracotta-100);
 }
 
-main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px;
+/* 3. Thème Tailwind : chaque --color-xxx devient bg-xxx, text-xxx, border-xxx */
+@theme inline {
+  --font-sans: 'Geist Variable', sans-serif;
+  --font-heading: var(--font-sans);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 }
 
-input[type='search'],
-select {
-  padding: 8px 12px;
-  font-size: 1rem;
-  border: 1px solid #c9d1c4;
-  border-radius: 6px;
-}
-
-.plant-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
-}
-
-.plant-card {
-  padding: 16px;
-  background: white;
-  border: 1px solid #dfe5da;
-  border-radius: 8px;
-}
-
-.plant-card h2 {
-  margin: 0 0 4px;
-  font-size: 1.1rem;
-}
-
-.latin {
-  margin: 0 0 8px;
-  font-style: italic;
-  color: #5d6b5a;
-}
-
-.badge {
-  display: inline-block;
-  margin: 0;
-  padding: 2px 8px;
-  font-size: 0.85rem;
-  background: #e3efe0;
-  border-radius: 999px;
-}
-
-.badge-out {
-  background: #f7e0dc;
-}
-
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background font-sans text-foreground;
+  }
 }

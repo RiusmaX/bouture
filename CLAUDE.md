@@ -8,7 +8,10 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
   - une fonctionnalité par dossier dans `src/modules/` : `*.schemas.ts` (Zod), `*.service.ts` (Prisma), `*.routes.ts` (Fastify).
   - `prisma/schema.prisma` : le schéma de la base ; toute modification passe par une migration (`npm run db:migrate`).
   - `src/generated/` : client Prisma généré, ne jamais le modifier.
-- `apps/web` : interface React (Vite, TypeScript).
+- `apps/web` : interface React (Vite, TypeScript, Tailwind CSS, shadcn/ui).
+  - imports par l'alias `@/` (dossier `src`), sans extension.
+  - `src/components/ui/` : composants shadcn/ui, ajoutés avec `npx shadcn@latest add <nom>`.
+  - couleurs : uniquement les tokens sémantiques (`bg-primary`, `text-muted-foreground`…), jamais de couleur en dur. Tokens de marque dans `design/tokens.json`.
 - `exercises/` : exercices du jour 1, hors application. Ne pas modifier.
 
 ## Commandes (à la racine)

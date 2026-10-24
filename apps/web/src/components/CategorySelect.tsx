@@ -1,25 +1,38 @@
-import { categories, categoryLabels } from '../categories.ts';
-import type { Category } from '../types.ts';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { categories, categoryLabels } from '@/categories';
+import type { Category } from '@/types';
 
 interface CategorySelectProps {
   value: Category | '';
   onChange: (value: Category | '') => void;
 }
 
+// Le Select de shadcn/ui n'accepte pas la valeur vide : « all » la remplace
+const ALL = 'all';
+
 export function CategorySelect({ value, onChange }: CategorySelectProps) {
   return (
-    <select
-      aria-label="Catégorie"
-      value={value}
-      // La valeur d'un select est une chaîne : on l'affirme en Category, la liste est fermée
-      onChange={(event) => onChange(event.target.value as Category | '')}
+    <Select
+      value={value || ALL}
+      onValueChange={(next) => onChange(next === ALL ? '' : (next as Category))}
     >
-      <option value="">Toutes les catégories</option>
-      {categories.map((category) => (
-        <option key={category} value={category}>
-          {categoryLabels[category]}
-        </option>
-      ))}
-    </select>
+      <SelectTrigger aria-label="Catégorie" className="w-48">
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value={ALL}>Toutes les catégories</SelectItem>
+        {categories.map((category) => (
+          <SelectItem key={category} value={category}>
+            {categoryLabels[category]}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }
