@@ -1,0 +1,19 @@
+# Requêtes HTTP à lancer depuis VS Code (extension REST Client) :
+# un clic sur « Send Request » au-dessus de chaque requête.
+
+### TD 4 · Une API publique : les communes d'un code postal (geo.api.gouv.fr)
+GET https://geo.api.gouv.fr/communes?codePostal=44115&fields=nom,population
+
+### TD 4 · Une commune précise, par son code INSEE
+GET https://geo.api.gouv.fr/communes/44071
+
+### TD 4 · Une ressource qui n'existe pas : quel code de statut ?
+GET https://geo.api.gouv.fr/communes/99999
+
+### Bouture · le catalogue (à partir du TD 5)
+@api = http://localhost:3000
+
+GET {{api}}/plants?category=hedge&page=1&pageSize=5
+
+### Bouture · un végétal
+GET {{api}}/plants/10
