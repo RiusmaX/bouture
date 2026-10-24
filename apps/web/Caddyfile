@@ -1,0 +1,14 @@
+# SITE_ADDRESS : le nom de domaine en production (HTTPS automatique), « :80 » en local
+{$SITE_ADDRESS::80} {
+	encode
+	# /api/plants → http://api:3000/plants
+	handle_path /api/* {
+		reverse_proxy api:3000
+	}
+	# Le reste : l'application React. Toute adresse inconnue renvoie index.html (routes du navigateur)
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}

@@ -4,10 +4,17 @@
       "Bash(npm run typecheck)",
       "Bash(npm run lint)",
       "Bash(npm test)",
-      "Bash(git diff:*)",
       "Bash(git status)",
-      "Bash(git log:*)"
+      "Bash(git diff)",
+      "Bash(git diff main...HEAD)"
     ],
-    "deny": ["Read(./**/.env)", "Bash(npx prisma migrate reset:*)"]
+    "deny": [
+      "Read(./**/.env)",
+      "Read(./**/.env.production)",
+      "Bash(cat *.env*)",
+      "Bash(npx prisma migrate reset*)",
+      "Bash(npx prisma db push --force-reset*)",
+      "Bash(npm exec prisma migrate reset*)"
+    ]
   }
 }

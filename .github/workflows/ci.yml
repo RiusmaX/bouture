@@ -1,0 +1,58 @@
+# Intégration continue : à chaque pull request et à chaque push sur main,
+# on vérifie les types, le style, les tests et la construction.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    # Une base PostgreSQL jetable pour les tests, avec les identifiants de .env.test
+    services:
+      db:
+        image: postgres:17
+        env:
+          POSTGRES_USER: bouture
+          POSTGRES_PASSWORD: bouture
+          POSTGRES_DB: bouture_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U bouture"
+          --health-interval 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+        env:
+          DATABASE_URL: postgresql://bouture:bouture@localhost:5432/bouture_test
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build -w @bouture/web
+
+  # Déploiement : seulement sur main, et seulement si les vérifications sont passées
+  deploy:
+    needs: check
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    # Les secrets sont rangés dans l'environnement « recette » du dépôt GitHub
+    environment: recette
+    steps:
+      - name: Mise à jour du serveur
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /opt/bouture
+            git pull --ff-only
+            docker compose -f compose.prod.yaml up -d --build
+            docker image prune -f
