@@ -1,0 +1,14 @@
+{
+  "name": "bouture-exercises",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "td1": "node --test td01-javascript/*.test.js",
+    "td2": "node --test td02-typescript/*.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "typescript": "~6.0.3"
+  }
+}

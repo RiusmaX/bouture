@@ -1,0 +1,15 @@
+{
+  // Réglages du TD 2 : TypeScript vérifie, Node exécute (il efface les types au lancement)
+  "compilerOptions": {
+    "target": "es2024",
+    "module": "nodenext",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+    "types": ["node"]
+  },
+  "include": ["td02-typescript/**/*.ts"]
+}
