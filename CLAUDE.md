@@ -8,6 +8,7 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
   - une fonctionnalité par dossier dans `src/modules/` : `*.schemas.ts` (Zod), `*.service.ts` (Prisma), `*.routes.ts` (Fastify).
   - `prisma/schema.prisma` : le schéma de la base ; toute modification passe par une migration (`npm run db:migrate`).
   - `src/generated/` : client Prisma généré, ne jamais le modifier.
+- `apps/web` : interface React (Vite, TypeScript).
 - `exercises/` : exercices du jour 1, hors application. Ne pas modifier.
 
 ## Commandes (à la racine)
@@ -15,6 +16,7 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 - `npm run db:up` : démarre PostgreSQL (Docker).
 - `npm run db:migrate` puis `npm run db:seed` : crée les tables et les données de démonstration.
 - `npm run dev:api` : lance l'API en mode surveillance.
+- `npm run dev:web` : lance l'interface (http://localhost:5173).
 - `npm run typecheck` : vérifie les types de tous les paquets.
 - `npm test` : lance les tests (Vitest), sur la base `bouture_test` (voir `apps/api/.env.test`).
 - `npm run lint` et `npm run format` : ESLint et Prettier.

@@ -1,0 +1,7 @@
+/* Styles globaux, remplacés par Tailwind CSS au TD 10 */
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #1f2a1f;
+  background: #f7f8f5;
+}
