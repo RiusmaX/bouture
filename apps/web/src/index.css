@@ -5,3 +5,54 @@ body {
   color: #1f2a1f;
   background: #f7f8f5;
 }
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+input[type='search'],
+select {
+  padding: 8px 12px;
+  font-size: 1rem;
+  border: 1px solid #c9d1c4;
+  border-radius: 6px;
+}
+
+.plant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.plant-card {
+  padding: 16px;
+  background: white;
+  border: 1px solid #dfe5da;
+  border-radius: 8px;
+}
+
+.plant-card h2 {
+  margin: 0 0 4px;
+  font-size: 1.1rem;
+}
+
+.latin {
+  margin: 0 0 8px;
+  font-style: italic;
+  color: #5d6b5a;
+}
+
+.badge {
+  display: inline-block;
+  margin: 0;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+  background: #e3efe0;
+  border-radius: 999px;
+}
+
+.badge-out {
+  background: #f7e0dc;
+}
