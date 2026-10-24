@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { categoryLabels } from '@/categories';
@@ -12,9 +13,14 @@ export function PlantCard({ plant }: PlantCardProps) {
   const outOfStock = plant.stock === 0;
 
   return (
-    <Card>
+    <Card className="relative">
       <CardHeader>
-        <CardTitle>{plant.name}</CardTitle>
+        <CardTitle>
+          {/* Le lien couvre la carte entière grâce à after:absolute (carte en relative) */}
+          <Link to={`/plants/${plant.id}`} className="after:absolute after:inset-0 hover:underline">
+            {plant.name}
+          </Link>
+        </CardTitle>
         <CardDescription className="italic">{plant.latinName}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-3">
