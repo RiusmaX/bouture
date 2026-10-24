@@ -56,3 +56,10 @@ select {
 .badge-out {
   background: #f7e0dc;
 }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
