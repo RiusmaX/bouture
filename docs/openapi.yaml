@@ -1,0 +1,141 @@
+# Contrat de l'API Bouture (extrait : le catalogue).
+# Écrit avant le code : l'interface et l'API se mettent d'accord sur ce document.
+openapi: 3.1.0
+info:
+  title: Bouture API
+  version: 1.0.0
+  description: Gestion de pépinière (catalogue, clients, commandes).
+servers:
+  - url: http://localhost:3000
+paths:
+  /plants:
+    get:
+      summary: Liste les végétaux du catalogue
+      parameters:
+        - name: category
+          in: query
+          schema: { $ref: '#/components/schemas/Category' }
+        - name: search
+          in: query
+          description: Recherche dans le nom et le nom latin
+          schema: { type: string }
+        - name: page
+          in: query
+          schema: { type: integer, minimum: 1, default: 1 }
+        - name: pageSize
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+      responses:
+        '200':
+          description: Une page de végétaux
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, total, page, pageSize]
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/Plant' }
+                  total: { type: integer }
+                  page: { type: integer }
+                  pageSize: { type: integer }
+    post:
+      summary: Ajoute un végétal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlantInput' }
+      responses:
+        '201':
+          description: Végétal créé
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Plant' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+  /plants/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema: { type: integer }
+    get:
+      summary: Détail d'un végétal
+      responses:
+        '200':
+          description: Le végétal
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Plant' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    patch:
+      summary: Modifie un végétal (champs partiels)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/PlantPatch' }
+      responses:
+        '200':
+          description: Végétal modifié
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Plant' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404': { $ref: '#/components/responses/NotFound' }
+    delete:
+      summary: Supprime un végétal
+      responses:
+        '204': { description: Supprimé, pas de contenu }
+        '404': { $ref: '#/components/responses/NotFound' }
+components:
+  schemas:
+    Category:
+      type: string
+      enum: [tree, shrub, perennial, climber, hedge, fruit, aromatic]
+    PlantInput:
+      type: object
+      required: [name, latinName, category, potSize, priceCents, stock]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        latinName: { type: string, maxLength: 120 }
+        category: { $ref: '#/components/schemas/Category' }
+        potSize: { type: string, maxLength: 30 }
+        priceCents: { type: integer, minimum: 0 }
+        stock: { type: integer, minimum: 0 }
+    PlantPatch:
+      description: Les mêmes champs que PlantInput, tous facultatifs
+      type: object
+      properties:
+        name: { type: string, minLength: 1, maxLength: 120 }
+        latinName: { type: string, maxLength: 120 }
+        category: { $ref: '#/components/schemas/Category' }
+        potSize: { type: string, maxLength: 30 }
+        priceCents: { type: integer, minimum: 0 }
+        stock: { type: integer, minimum: 0 }
+    Plant:
+      allOf:
+        - type: object
+          required: [id]
+          properties:
+            id: { type: integer }
+        - $ref: '#/components/schemas/PlantInput'
+    Error:
+      type: object
+      required: [statusCode, error, message]
+      properties:
+        statusCode: { type: integer }
+        error: { type: string }
+        message: { type: string }
+  responses:
+    BadRequest:
+      description: Données invalides
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Ressource introuvable
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
