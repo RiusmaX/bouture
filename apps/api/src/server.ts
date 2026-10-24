@@ -1,3 +1,11 @@
+import { buildApp } from './app.ts';
 import { config } from './config.ts';
 
-console.log(`Bouture API prête à écouter sur le port ${config.port}`);
+const app = await buildApp();
+
+try {
+  await app.listen({ port: config.port, host: config.host });
+} catch (error) {
+  app.log.error(error);
+  process.exit(1);
+}
