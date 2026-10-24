@@ -17,3 +17,25 @@ GET {{api}}/plants?category=hedge&page=1&pageSize=5
 
 ### Bouture · un végétal
 GET {{api}}/plants/10
+
+### Bouture · ajouter un végétal (TP 1)
+POST {{api}}/plants
+Content-Type: application/json
+
+{
+  "name": "Sauge officinale",
+  "latinName": "Salvia officinalis",
+  "category": "aromatic",
+  "potSize": "C1",
+  "priceCents": 450,
+  "stock": 20
+}
+
+### Bouture · modifier le stock (TP 1)
+PATCH {{api}}/plants/31
+Content-Type: application/json
+
+{ "stock": 3 }
+
+### Bouture · supprimer (TP 1)
+DELETE {{api}}/plants/31

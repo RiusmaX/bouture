@@ -23,6 +23,12 @@ export const plantSchema = z.object({
   stock: z.number().int().min(0),
 });
 
+// Ce que le client envoie pour créer : tout sauf l'id, attribué par le serveur
+export const plantInputSchema = plantSchema.omit({ id: true });
+
+// Pour modifier : les mêmes champs, tous facultatifs
+export const plantPatchSchema = plantInputSchema.partial();
+
 // Paramètres de la liste : la query string n'a que des chaînes, coerce les convertit en nombres
 export const plantListQuerySchema = z.object({
   category: categorySchema.optional(),
@@ -44,4 +50,6 @@ export const plantIdParamsSchema = z.object({
 
 export type Category = z.infer<typeof categorySchema>;
 export type Plant = z.infer<typeof plantSchema>;
+export type PlantInput = z.infer<typeof plantInputSchema>;
+export type PlantPatch = z.infer<typeof plantPatchSchema>;
 export type PlantListQuery = z.infer<typeof plantListQuerySchema>;

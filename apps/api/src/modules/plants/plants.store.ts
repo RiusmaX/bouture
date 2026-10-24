@@ -1,4 +1,4 @@
-import type { Plant, PlantListQuery } from './plants.schemas.ts';
+import type { Plant, PlantInput, PlantListQuery, PlantPatch } from './plants.schemas.ts';
 import initialPlants from '../../data/plants.json' with { type: 'json' };
 
 // Stockage en mémoire, le temps d'arriver à PostgreSQL (TD 6) :
@@ -31,4 +31,26 @@ export function listPlants({ category, search, page, pageSize }: PlantListQuery)
 
 export function findPlant(id: number) {
   return plants.find((plant) => plant.id === id);
+}
+
+export function createPlant(input: PlantInput) {
+  const id = Math.max(0, ...plants.map((plant) => plant.id)) + 1;
+  const plant = { id, ...input };
+  plants.push(plant);
+  return plant;
+}
+
+// Renvoie undefined si le végétal n'existe pas : la route décide de la réponse HTTP
+export function updatePlant(id: number, patch: PlantPatch) {
+  const plant = findPlant(id);
+  if (!plant) return undefined;
+  Object.assign(plant, patch);
+  return plant;
+}
+
+export function deletePlant(id: number) {
+  const index = plants.findIndex((plant) => plant.id === id);
+  if (index === -1) return false;
+  plants.splice(index, 1);
+  return true;
 }
