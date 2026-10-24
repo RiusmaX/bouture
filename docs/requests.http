@@ -39,3 +39,17 @@ Content-Type: application/json
 
 ### Bouture · supprimer (TP 1)
 DELETE {{api}}/plants/31
+
+### Bouture · clients particuliers (TP 2)
+GET {{api}}/customers?type=private
+
+### Bouture · ajouter un client (TP 2)
+POST {{api}}/customers
+Content-Type: application/json
+
+{
+  "name": "Pépinières du Lac",
+  "email": "contact@pepinieres-lac.example",
+  "city": "Grand-Lieu",
+  "type": "professional"
+}

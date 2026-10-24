@@ -36,3 +36,21 @@ model Plant {
   // En base, les noms suivent la convention SQL (snake_case, pluriel)
   @@map("plants")
 }
+
+enum CustomerType {
+  professional
+  private
+}
+
+model Customer {
+  id        Int          @id @default(autoincrement())
+  name      String       @db.VarChar(120)
+  email     String       @unique @db.VarChar(254)
+  phone     String?      @db.VarChar(30)
+  city      String       @db.VarChar(80)
+  type      CustomerType
+  createdAt DateTime     @default(now()) @map("created_at")
+  updatedAt DateTime     @updatedAt @map("updated_at")
+
+  @@map("customers")
+}

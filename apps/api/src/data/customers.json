@@ -1,0 +1,58 @@
+[
+  {
+    "name": "Paysages de l'Erdre",
+    "email": "contact@paysages-erdre.fr",
+    "phone": "02 40 12 34 56",
+    "city": "Nantes",
+    "type": "professional"
+  },
+  {
+    "name": "Mairie de Haute-Goulaine",
+    "email": "espaces-verts@haute-goulaine.example",
+    "phone": "02 40 54 90 00",
+    "city": "Haute-Goulaine",
+    "type": "professional"
+  },
+  {
+    "name": "Jardinerie du Vignoble",
+    "email": "achats@jardinerie-vignoble.example",
+    "phone": "02 40 36 11 22",
+    "city": "Clisson",
+    "type": "professional"
+  },
+  {
+    "name": "Camille Moreau",
+    "email": "camille.moreau@example.com",
+    "phone": null,
+    "city": "Vertou",
+    "type": "private"
+  },
+  {
+    "name": "Hugo Lefèvre",
+    "email": "hugo.lefevre@example.com",
+    "phone": "06 12 34 56 78",
+    "city": "Rezé",
+    "type": "private"
+  },
+  {
+    "name": "Élagage Atlantique",
+    "email": "devis@elagage-atlantique.example",
+    "phone": "02 51 70 80 90",
+    "city": "Saint-Herblain",
+    "type": "professional"
+  },
+  {
+    "name": "Léa Bernard",
+    "email": "lea.bernard@example.com",
+    "phone": null,
+    "city": "Le Loroux-Bottereau",
+    "type": "private"
+  },
+  {
+    "name": "Les Serres de Loire",
+    "email": "bonjour@serres-loire.example",
+    "phone": "02 41 22 33 44",
+    "city": "Angers",
+    "type": "professional"
+  }
+]

@@ -1,0 +1,112 @@
+import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod';
+import { z } from 'zod';
+import {
+  customerIdParamsSchema,
+  customerInputSchema,
+  customerListQuerySchema,
+  customerPageSchema,
+  customerPatchSchema,
+  customerSchema,
+} from './customers.schemas.ts';
+import {
+  createCustomer,
+  deleteCustomer,
+  findCustomer,
+  findCustomerByEmail,
+  listCustomers,
+  updateCustomer,
+} from './customers.service.ts';
+
+export const customerRoutes: FastifyPluginAsyncZod = async (app) => {
+  const notFound = (id: number) => app.httpErrors.notFound(`Aucun client avec l'id ${id}`);
+
+  app.get(
+    '/',
+    {
+      schema: {
+        tags: ['customers'],
+        summary: 'Liste les clients',
+        querystring: customerListQuerySchema,
+        response: { 200: customerPageSchema },
+      },
+    },
+    (request) => listCustomers(request.query),
+  );
+
+  app.get(
+    '/:id',
+    {
+      schema: {
+        tags: ['customers'],
+        summary: "Détail d'un client",
+        params: customerIdParamsSchema,
+        response: { 200: customerSchema },
+      },
+    },
+    async (request) => {
+      const customer = await findCustomer(request.params.id);
+      if (!customer) throw notFound(request.params.id);
+      return customer;
+    },
+  );
+
+  app.post(
+    '/',
+    {
+      schema: {
+        tags: ['customers'],
+        summary: 'Ajoute un client',
+        body: customerInputSchema,
+        response: { 201: customerSchema },
+      },
+    },
+    async (request, reply) => {
+      // L'adresse e-mail est unique : 409 Conflict plutôt qu'une erreur 500 de la base
+      if (await findCustomerByEmail(request.body.email)) {
+        throw app.httpErrors.conflict('Un client utilise déjà cette adresse e-mail');
+      }
+      return reply.code(201).send(await createCustomer(request.body));
+    },
+  );
+
+  app.patch(
+    '/:id',
+    {
+      schema: {
+        tags: ['customers'],
+        summary: 'Modifie un client',
+        params: customerIdParamsSchema,
+        body: customerPatchSchema,
+        response: { 200: customerSchema },
+      },
+    },
+    async (request) => {
+      const { email } = request.body;
+      if (email) {
+        const other = await findCustomerByEmail(email);
+        if (other && other.id !== request.params.id) {
+          throw app.httpErrors.conflict('Un client utilise déjà cette adresse e-mail');
+        }
+      }
+      const customer = await updateCustomer(request.params.id, request.body);
+      if (!customer) throw notFound(request.params.id);
+      return customer;
+    },
+  );
+
+  app.delete(
+    '/:id',
+    {
+      schema: {
+        tags: ['customers'],
+        summary: 'Supprime un client',
+        params: customerIdParamsSchema,
+        response: { 204: z.null() },
+      },
+    },
+    async (request, reply) => {
+      if (!(await deleteCustomer(request.params.id))) throw notFound(request.params.id);
+      return reply.code(204).send(null);
+    },
+  );
+};

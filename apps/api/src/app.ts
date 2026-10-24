@@ -10,6 +10,7 @@ import {
 } from 'fastify-type-provider-zod';
 import { config } from './config.ts';
 import { prisma } from './db.ts';
+import { customerRoutes } from './modules/customers/customers.routes.ts';
 import { plantRoutes } from './modules/plants/plants.routes.ts';
 
 // Construit l'application sans la démarrer : les tests pourront l'utiliser sans ouvrir de port.
@@ -35,6 +36,7 @@ export async function buildApp() {
 
   // Une fonctionnalité = un plugin, monté sous son préfixe
   await app.register(plantRoutes, { prefix: '/plants' });
+  await app.register(customerRoutes, { prefix: '/customers' });
 
   return app;
 }
