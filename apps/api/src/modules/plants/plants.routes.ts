@@ -7,8 +7,16 @@ import {
   plantPatchSchema,
   plantPageSchema,
   plantSchema,
+  plantStatsSchema,
 } from '@bouture/shared';
-import { createPlant, deletePlant, findPlant, listPlants, updatePlant } from './plants.service.ts';
+import {
+  createPlant,
+  deletePlant,
+  findPlant,
+  listPlants,
+  plantStats,
+  updatePlant,
+} from './plants.service.ts';
 
 // Les routes du catalogue. Le préfixe /plants est donné à l'enregistrement (app.ts).
 export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
@@ -28,6 +36,19 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
     },
     // request.query est déjà validé et typé : page est un nombre, category une valeur connue
     (request) => listPlants(request.query),
+  );
+
+  // GET /plants/stats : déclarée avant /:id, sinon « stats » serait pris pour un id
+  app.get(
+    '/stats',
+    {
+      schema: {
+        tags: ['plants'],
+        summary: 'Résumé du stock',
+        response: { 200: plantStatsSchema },
+      },
+    },
+    () => plantStats(),
   );
 
   // GET /plants/10

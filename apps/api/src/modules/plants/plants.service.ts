@@ -57,3 +57,20 @@ export async function deletePlant(id: number) {
   const { count } = await prisma.plant.deleteMany({ where: { id } });
   return count > 0;
 }
+
+// Le calcul est fait par PostgreSQL : on ne charge pas tout le catalogue pour une somme
+export async function plantStats() {
+  const [row] = await prisma.$queryRaw<
+    { count: bigint; outOfStock: bigint; value: bigint | null }[]
+  >`
+    SELECT count(*) AS "count",
+           count(*) FILTER (WHERE stock = 0) AS "outOfStock",
+           sum(price_cents * stock) AS "value"
+    FROM plants`;
+  // PostgreSQL renvoie des bigint pour les sommes : on les convertit en nombres
+  return {
+    count: Number(row?.count ?? 0),
+    outOfStock: Number(row?.outOfStock ?? 0),
+    stockValueCents: Number(row?.value ?? 0),
+  };
+}

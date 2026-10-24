@@ -57,6 +57,15 @@ describe('GET /plants', () => {
   });
 });
 
+describe('GET /plants/stats', () => {
+  it('résume le stock du catalogue', async () => {
+    const response = await app.inject({ headers, method: 'GET', url: '/plants/stats' });
+
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({ outOfStock: 4 });
+  });
+});
+
 describe('GET /plants/:id', () => {
   it('renvoie 404 si le végétal n’existe pas', async () => {
     const response = await app.inject({ headers, method: 'GET', url: '/plants/9999' });

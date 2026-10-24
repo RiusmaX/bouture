@@ -49,8 +49,16 @@ export const plantIdParamsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+// Résumé du stock, affiché en tête du catalogue
+export const plantStatsSchema = z.object({
+  count: z.number().int(),
+  outOfStock: z.number().int(),
+  stockValueCents: z.number().int(),
+});
+
 export type Category = z.infer<typeof categorySchema>;
 export type Plant = z.infer<typeof plantSchema>;
+export type PlantStats = z.infer<typeof plantStatsSchema>;
 export type PlantInput = z.infer<typeof plantInputSchema>;
 export type PlantPatch = z.infer<typeof plantPatchSchema>;
 export type PlantListQuery = z.infer<typeof plantListQuerySchema>;

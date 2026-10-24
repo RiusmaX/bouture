@@ -1,5 +1,12 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { Page, Plant, PlantInput, PlantListQuery, PlantPatch } from '@bouture/shared';
+import type {
+  Page,
+  Plant,
+  PlantInput,
+  PlantListQuery,
+  PlantPatch,
+  PlantStats,
+} from '@bouture/shared';
 import { apiFetch, withQuery } from '@/lib/api';
 
 // Les clés de cache : un tableau qui décrit la donnée. Même clé = même donnée en cache.
@@ -8,6 +15,7 @@ export const plantKeys = {
   lists: () => [...plantKeys.all, 'list'] as const,
   list: (query: Partial<PlantListQuery>) => [...plantKeys.lists(), query] as const,
   detail: (id: number) => [...plantKeys.all, 'detail', id] as const,
+  stats: () => [...plantKeys.all, 'stats'] as const,
 };
 
 export function usePlants(query: Partial<PlantListQuery>) {
@@ -16,6 +24,13 @@ export function usePlants(query: Partial<PlantListQuery>) {
     queryFn: () => apiFetch<Page<Plant>>(withQuery('/plants', query)),
     // Pendant le chargement de la page suivante, on garde l'ancienne à l'écran
     placeholderData: keepPreviousData,
+  });
+}
+
+export function usePlantStats() {
+  return useQuery({
+    queryKey: plantKeys.stats(),
+    queryFn: () => apiFetch<PlantStats>('/plants/stats'),
   });
 }
 
@@ -49,7 +64,10 @@ export function useDeletePlant() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => apiFetch<void>(`/plants/${id}`, { method: 'DELETE' }),
-    // Seules les listes sont invalidées : recharger le détail supprimé donnerait un 404
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: plantKeys.lists() }),
+    // Listes et résumé sont invalidés, pas le détail : le recharger donnerait un 404
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: plantKeys.stats() });
+      return queryClient.invalidateQueries({ queryKey: plantKeys.lists() });
+    },
   });
 }

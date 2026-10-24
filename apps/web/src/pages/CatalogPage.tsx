@@ -8,6 +8,7 @@ import { Pagination } from '@/components/Pagination';
 import { PlantsTable } from '@/components/PlantsTable';
 import { ErrorMessage, Loading } from '@/components/QueryState';
 import { SearchInput } from '@/components/SearchInput';
+import { StockSummary } from '@/components/StockSummary';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -71,6 +72,7 @@ export function CatalogPage() {
           </Link>
         </Button>
       </div>
+      <StockSummary />
       <div className="flex flex-wrap items-center gap-4">
         <SearchInput value={search} onChange={setSearch} />
         <CategorySelect
