@@ -42,6 +42,10 @@ export async function updateCustomer(id: number, patch: CustomerPatch) {
   return count === 0 ? null : findCustomer(id);
 }
 
+export function countCustomerOrders(id: number) {
+  return prisma.order.count({ where: { customerId: id } });
+}
+
 export async function deleteCustomer(id: number) {
   const { count } = await prisma.customer.deleteMany({ where: { id } });
   return count > 0;

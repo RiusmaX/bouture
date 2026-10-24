@@ -9,6 +9,7 @@ import {
   customerSchema,
 } from '@bouture/shared';
 import {
+  countCustomerOrders,
   createCustomer,
   deleteCustomer,
   findCustomer,
@@ -110,6 +111,10 @@ export const customerRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request, reply) => {
+      // Un client qui a des commandes reste en base : son historique doit rester lisible
+      if ((await countCustomerOrders(request.params.id)) > 0) {
+        throw app.httpErrors.conflict('Ce client a des commandes : il ne peut pas être supprimé');
+      }
       if (!(await deleteCustomer(request.params.id))) throw notFound(request.params.id);
       return reply.code(204).send(null);
     },

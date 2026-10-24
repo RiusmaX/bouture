@@ -6,6 +6,7 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 
 - `apps/api` : API REST, Node.js, Fastify, Zod, Prisma (PostgreSQL).
   - une fonctionnalité par dossier dans `src/modules/` : `*.service.ts` (Prisma), `*.routes.ts` (Fastify).
+  - les écritures sur plusieurs tables passent par une transaction (`prisma.$transaction`), comme `orders.service.ts`.
   - `prisma/schema.prisma` : le schéma de la base ; toute modification passe par une migration (`npm run db:migrate`).
   - `src/generated/` : client Prisma généré, ne jamais le modifier.
 - `apps/web` : interface React (Vite, TypeScript, Tailwind CSS, shadcn/ui).

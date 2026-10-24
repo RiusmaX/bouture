@@ -13,6 +13,7 @@ import { config } from './config.ts';
 import { prisma } from './db.ts';
 import { authRoutes } from './modules/auth/auth.routes.ts';
 import { customerRoutes } from './modules/customers/customers.routes.ts';
+import { orderRoutes } from './modules/orders/orders.routes.ts';
 import { plantRoutes } from './modules/plants/plants.routes.ts';
 import { userRoutes } from './modules/users/users.routes.ts';
 import { authPlugin } from './plugins/auth.ts';
@@ -46,6 +47,7 @@ export async function buildApp() {
   await app.register(userRoutes, { prefix: '/users' });
   await app.register(plantRoutes, { prefix: '/plants' });
   await app.register(customerRoutes, { prefix: '/customers' });
+  await app.register(orderRoutes, { prefix: '/orders' });
 
   return app;
 }

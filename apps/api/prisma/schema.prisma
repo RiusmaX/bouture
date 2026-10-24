@@ -30,6 +30,7 @@ model Plant {
   stock      Int      @default(0)
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
+  orderItems OrderItem[]
 
   // Index pour les filtres les plus fréquents
   @@index([category])
@@ -51,6 +52,7 @@ model Customer {
   type      CustomerType
   createdAt DateTime     @default(now()) @map("created_at")
   updatedAt DateTime     @updatedAt @map("updated_at")
+  orders    Order[]
 
   @@map("customers")
 }
@@ -70,4 +72,38 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
 
   @@map("users")
+}
+
+enum OrderStatus {
+  confirmed
+  delivered
+  cancelled
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  // Restrict : impossible de supprimer un client qui a des commandes
+  customer   Customer    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  customerId Int         @map("customer_id")
+  status     OrderStatus @default(confirmed)
+  items      OrderItem[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+
+  @@index([customerId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id             Int   @id @default(autoincrement())
+  // Cascade : les lignes disparaissent avec leur commande
+  order          Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId        Int   @map("order_id")
+  plant          Plant @relation(fields: [plantId], references: [id], onDelete: Restrict)
+  plantId        Int   @map("plant_id")
+  quantity       Int
+  // Le prix au moment de la commande : il ne bouge plus si le catalogue change
+  unitPriceCents Int   @map("unit_price_cents")
+
+  @@map("order_items")
 }

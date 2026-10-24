@@ -3,5 +3,6 @@
 export * from './auth.ts';
 export * from './plants.ts';
 export * from './customers.ts';
+export * from './orders.ts';
 export * from './labels.ts';
 export * from './pagination.ts';

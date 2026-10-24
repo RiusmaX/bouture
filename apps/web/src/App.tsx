@@ -6,7 +6,9 @@ import { EditCustomerPage, NewCustomerPage } from '@/pages/CustomerFormPage';
 import { CustomersPage } from '@/pages/CustomersPage';
 import { LoginPage } from '@/pages/LoginPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
-import { PlaceholderPage } from '@/pages/PlaceholderPage';
+import { NewOrderPage } from '@/pages/NewOrderPage';
+import { OrderDetailPage } from '@/pages/OrderDetailPage';
+import { OrdersPage } from '@/pages/OrdersPage';
 import { PlantDetailPage } from '@/pages/PlantDetailPage';
 import { EditPlantPage, NewPlantPage } from '@/pages/PlantFormPage';
 import { UsersPage } from '@/pages/UsersPage';
@@ -28,7 +30,9 @@ export default function App() {
           <Route path="customers" element={<CustomersPage />} />
           <Route path="customers/new" element={<NewCustomerPage />} />
           <Route path="customers/:id/edit" element={<EditCustomerPage />} />
-          <Route path="orders" element={<PlaceholderPage title="Commandes" when="au TP final" />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="orders/new" element={<NewOrderPage />} />
+          <Route path="orders/:id" element={<OrderDetailPage />} />
           <Route element={<RequireAuth role="admin" />}>
             <Route path="users" element={<UsersPage />} />
           </Route>
