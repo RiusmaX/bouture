@@ -65,7 +65,7 @@ describe('POST /orders', () => {
 });
 
 describe('PATCH /orders/:id/status', () => {
-  it('remet en stock à l’annulation', async () => {
+  it("remet en stock à l'annulation", async () => {
     const created = await app.inject({
       headers,
       method: 'POST',

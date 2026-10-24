@@ -18,8 +18,8 @@ Node.js 24 (LTS), Git, Docker Desktop et VS Code. Le détail est dans la fiche d
 ```bash
 git clone https://github.com/RiusmaX/bouture.git
 cd bouture
+cp apps/api/.env.example apps/api/.env   # sous PowerShell : Copy-Item
 npm install
-cp apps/api/.env.example apps/api/.env
 npm run db:up        # PostgreSQL dans Docker
 npm run db:migrate   # crée les tables
 npm run db:seed      # données de démonstration
@@ -47,28 +47,29 @@ Les corrigés sont sur le tag `exercises-solution`.
 
 La branche `main` contient l'application terminée. Chaque activité part d'un tag ; sa correction est le tag suivant.
 
-| Tag de départ | Activité | Ce qu'on construit                              |
-| ------------- | -------- | ----------------------------------------------- |
-| `td03-start`  | TD 3     | Le monorepo initialisé à la main                |
-| `td04-start`  | TD 4     | Requêtes HTTP, lecture du contrat OpenAPI       |
-| `td05-start`  | TD 5     | L'API Fastify du catalogue                      |
-| `tp01-start`  | TP 1     | Créer, modifier, supprimer un végétal           |
-| `td06-start`  | TD 6     | PostgreSQL et Prisma                            |
-| `tp02-start`  | TP 2     | La ressource Clients                            |
-| `td07-start`  | TD 7     | Les tests de l'API                              |
-| `td08-start`  | TD 8     | L'interface initialisée avec Vite               |
-| `td09-start`  | TD 9     | La grille du catalogue et sa recherche          |
-| `tp03-start`  | TP 3     | Le filtre par catégorie                         |
-| `td10-start`  | TD 10    | Design tokens, Tailwind CSS, shadcn/ui          |
-| `td11-start`  | TD 11    | La navigation                                   |
-| `td12-start`  | TD 12    | Le catalogue servi par l'API                    |
-| `td13-start`  | TD 13    | Tableau trié et paginé, formulaire d'un végétal |
-| `tp04-start`  | TP 4     | La liste et le formulaire Clients               |
-| `td14-start`  | TD 14    | La connexion et les rôles                       |
-| `td15-start`  | TD 15    | Une pull request relue en binôme                |
-| `td16-start`  | TD 16    | Docker, intégration et déploiement continus     |
-| `tp05-start`  | TP final | Le module Commandes                             |
-| `final`       |          | L'application complète                          |
+| Tag de départ   | Activité | Ce qu'on construit                              |
+| --------------- | -------- | ----------------------------------------------- |
+| `td03-start`    | TD 3     | Le monorepo initialisé à la main                |
+| `td04-start`    | TD 4     | Requêtes HTTP, lecture du contrat OpenAPI       |
+| `td05-start`    | TD 5     | L'API Fastify du catalogue                      |
+| `tp01-start`    | TP 1     | Créer, modifier, supprimer un végétal           |
+| `td06-start`    | TD 6     | PostgreSQL et Prisma                            |
+| `tp02-start`    | TP 2     | La ressource Clients                            |
+| `td07-start`    | TD 7     | Les tests de l'API                              |
+| `td08-start`    | TD 8     | L'interface initialisée avec Vite               |
+| `td09-start`    | TD 9     | La grille du catalogue et sa recherche          |
+| `tp03-start`    | TP 3     | Le filtre par catégorie                         |
+| `td10-start`    | TD 10    | Design tokens, Tailwind CSS, shadcn/ui          |
+| `td11-start`    | TD 11    | La navigation                                   |
+| `td12-start`    | TD 12    | Le catalogue servi par l'API                    |
+| `td13-start`    | TD 13    | Tableau trié et paginé, formulaire d'un végétal |
+| `tp04-start`    | TP 4     | La liste et le formulaire Clients               |
+| `tp04-solution` |          | Correction du TP 4, avant la connexion côté API |
+| `td14-start`    | TD 14    | La connexion et les rôles                       |
+| `td15-start`    | TD 15    | Une pull request relue en binôme                |
+| `td16-start`    | TD 16    | Docker, intégration et déploiement continus     |
+| `tp05-start`    | TP final | Le module Commandes                             |
+| `final`         |          | L'application complète                          |
 
 ### Repartir d'une étape
 

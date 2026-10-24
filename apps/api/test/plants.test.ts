@@ -67,7 +67,7 @@ describe('GET /plants/stats', () => {
 });
 
 describe('GET /plants/:id', () => {
-  it('renvoie 404 si le végétal n’existe pas', async () => {
+  it("renvoie 404 si le végétal n'existe pas", async () => {
     const response = await app.inject({ headers, method: 'GET', url: '/plants/9999' });
 
     expect(response.statusCode).toBe(404);

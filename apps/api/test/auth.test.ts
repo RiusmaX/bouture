@@ -8,7 +8,7 @@ beforeAll(() => app.ready());
 afterAll(() => app.close());
 
 describe('POST /auth/login', () => {
-  it('pose un cookie httpOnly et renvoie l’utilisateur sans son mot de passe', async () => {
+  it("pose un cookie httpOnly et renvoie l'utilisateur sans son mot de passe", async () => {
     const response = await app.inject({ method: 'POST', url: '/auth/login', payload: ADMIN });
 
     expect(response.statusCode).toBe(200);
@@ -34,7 +34,7 @@ describe('POST /auth/login', () => {
 });
 
 describe('GET /auth/me', () => {
-  it('renvoie l’utilisateur connecté', async () => {
+  it("renvoie l'utilisateur connecté", async () => {
     const headers = await login(app);
     const response = await app.inject({ headers, method: 'GET', url: '/auth/me' });
 
