@@ -11,8 +11,16 @@ import { SearchInput } from '@/components/SearchInput';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
+import { usePreferences } from '@/stores/preferences';
 
 export function CatalogPage() {
   useDocumentTitle('Catalogue');
@@ -43,7 +51,10 @@ export function CatalogPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- on ne réagit qu'à la frappe
   }, [debouncedSearch]);
 
-  const { data, isPending, error, isFetching } = usePlants(query);
+  // Zustand : on lit seulement ce dont on a besoin, le composant ne réagit qu'à ces valeurs
+  const pageSize = usePreferences((state) => state.pageSize);
+  const setPageSize = usePreferences((state) => state.setPageSize);
+  const { data, isPending, error, isFetching } = usePlants({ ...query, pageSize });
 
   const handleSort = (column: PlantSort) => {
     const order = query.sort === column && query.order === 'asc' ? 'desc' : 'asc';
@@ -76,6 +87,24 @@ export function CatalogPage() {
           />
           <Label htmlFor="in-stock">En stock seulement</Label>
         </div>
+        <Select
+          value={String(pageSize)}
+          onValueChange={(value) => {
+            setPageSize(Number(value));
+            update({});
+          }}
+        >
+          <SelectTrigger aria-label="Lignes par page" className="ml-auto w-32">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {[10, 20, 50].map((size) => (
+              <SelectItem key={size} value={String(size)}>
+                {size} par page
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       {isPending ? (
         <Loading />

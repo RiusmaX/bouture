@@ -5,6 +5,7 @@ import {
   useDeleteCustomer,
   useUpdateCustomer,
 } from '@/api/customers';
+import { useAuth } from '@/auth/AuthContext';
 import { ConfirmDelete } from '@/components/ConfirmDelete';
 import { CustomerForm } from '@/components/CustomerForm';
 import { ErrorMessage, Loading } from '@/components/QueryState';
@@ -35,6 +36,7 @@ export function EditCustomerPage() {
   const { data: customer, isPending, error } = useCustomer(id);
   const updateCustomer = useUpdateCustomer(id);
   const deleteCustomer = useDeleteCustomer();
+  const isAdmin = useAuth().state.user?.role === 'admin';
   useDocumentTitle(customer?.name ?? 'Client');
 
   if (isPending) return <Loading />;
@@ -44,15 +46,17 @@ export function EditCustomerPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-3xl font-semibold text-primary">{customer.name}</h1>
-        <ConfirmDelete
-          title={`Supprimer ${customer.name} ?`}
-          description="Le client et ses coordonnées sont supprimés. Cette action est définitive."
-          onConfirm={() =>
-            deleteCustomer.mutate(id, {
-              onSuccess: () => navigate('/customers', { replace: true }),
-            })
-          }
-        />
+        {isAdmin && (
+          <ConfirmDelete
+            title={`Supprimer ${customer.name} ?`}
+            description="Le client et ses coordonnées sont supprimés. Cette action est définitive."
+            onConfirm={() =>
+              deleteCustomer.mutate(id, {
+                onSuccess: () => navigate('/customers', { replace: true }),
+              })
+            }
+          />
+        )}
       </div>
       {deleteCustomer.error && <ErrorMessage error={deleteCustomer.error} />}
       <CustomerForm

@@ -2,6 +2,7 @@ import { ArrowLeftIcon, PencilIcon } from 'lucide-react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { categoryLabels } from '@bouture/shared';
 import { useDeletePlant, usePlant } from '@/api/plants';
+import { useAuth } from '@/auth/AuthContext';
 import { ConfirmDelete } from '@/components/ConfirmDelete';
 import { ErrorMessage, Loading } from '@/components/QueryState';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +16,7 @@ export function PlantDetailPage() {
   const navigate = useNavigate();
   const { data: plant, isPending, error } = usePlant(id);
   const deletePlant = useDeletePlant();
+  const isAdmin = useAuth().state.user?.role === 'admin';
   useDocumentTitle(plant?.name ?? 'Végétal');
 
   if (isPending) return <Loading />;
@@ -33,13 +35,16 @@ export function PlantDetailPage() {
               <PencilIcon aria-hidden /> Modifier
             </Link>
           </Button>
-          <ConfirmDelete
-            title={`Supprimer ${plant.name} ?`}
-            description="Le végétal disparaît du catalogue. Cette action est définitive."
-            onConfirm={() =>
-              deletePlant.mutate(id, { onSuccess: () => navigate('/plants', { replace: true }) })
-            }
-          />
+          {/* Le bouton est masqué, mais c'est l'API qui protège vraiment (403) */}
+          {isAdmin && (
+            <ConfirmDelete
+              title={`Supprimer ${plant.name} ?`}
+              description="Le végétal disparaît du catalogue. Cette action est définitive."
+              onConfirm={() =>
+                deletePlant.mutate(id, { onSuccess: () => navigate('/plants', { replace: true }) })
+              }
+            />
+          )}
         </div>
       </div>
       {deletePlant.error && <ErrorMessage error={deletePlant.error} />}

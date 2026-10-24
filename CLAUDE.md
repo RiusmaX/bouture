@@ -10,6 +10,7 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
   - `src/generated/` : client Prisma généré, ne jamais le modifier.
 - `apps/web` : interface React (Vite, TypeScript, Tailwind CSS, shadcn/ui).
   - imports par l'alias `@/` (dossier `src`), sans extension.
+  - session : `src/auth/AuthContext.tsx` (Context + `useReducer`, hook `useAuth`) ; routes protégées par `RequireAuth`. Préférences d'interface : Zustand (`src/stores/`).
   - appels à l'API : `src/lib/api.ts` (`apiFetch`) et un fichier par ressource dans `src/api/` (hooks TanStack Query). En développement, `/api` est relayé vers l'API par Vite.
   - `src/components/ui/` : composants shadcn/ui, ajoutés avec `npx shadcn@latest add <nom>`.
   - couleurs : uniquement les tokens sémantiques (`bg-primary`, `text-muted-foreground`…), jamais de couleur en dur. Tokens de marque dans `design/tokens.json`.

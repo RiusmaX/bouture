@@ -4,7 +4,11 @@ import { loginInputSchema, userSchema } from '@bouture/shared';
 import { prisma } from '../../db.ts';
 import { config } from '../../config.ts';
 import { TOKEN_COOKIE } from '../../plugins/auth.ts';
-import { verifyPassword } from './password.ts';
+import { hashPassword, verifyPassword } from './password.ts';
+
+// Empreinte factice, calculée une fois : vérifiée quand l'adresse est inconnue, pour que la réponse
+// prenne le même temps dans les deux cas (sinon la durée révèle quelles adresses existent)
+const dummyHash = await hashPassword('mot-de-passe-factice');
 
 const cookieOptions = {
   path: '/',
@@ -33,7 +37,8 @@ export const authRoutes: FastifyPluginAsyncZod = async (app) => {
       const { email, password } = request.body;
       const user = await prisma.user.findUnique({ where: { email } });
       // Même message que l'adresse soit inconnue ou le mot de passe faux : on ne renseigne pas un attaquant
-      if (!user || !(await verifyPassword(password, user.passwordHash))) {
+      const valid = await verifyPassword(password, user?.passwordHash ?? dummyHash);
+      if (!user || !valid) {
         throw app.httpErrors.unauthorized('Adresse e-mail ou mot de passe incorrect');
       }
       const token = await reply.jwtSign({ id: user.id, role: user.role });
