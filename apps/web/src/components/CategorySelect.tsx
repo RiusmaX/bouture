@@ -1,3 +1,4 @@
+import { categories, categoryLabels, type Category } from '@bouture/shared';
 import {
   Select,
   SelectContent,
@@ -5,8 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { categories, categoryLabels } from '@/categories';
-import type { Category } from '@/types';
 
 interface CategorySelectProps {
   value: Category | '';

@@ -7,7 +7,7 @@ import {
   customerPageSchema,
   customerPatchSchema,
   customerSchema,
-} from './customers.schemas.ts';
+} from '@bouture/shared';
 import {
   createCustomer,
   deleteCustomer,

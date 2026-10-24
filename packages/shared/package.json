@@ -1,0 +1,13 @@
+{
+  "name": "@bouture/shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Schémas Zod et types partagés entre l'API et l'interface",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  }
+}

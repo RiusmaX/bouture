@@ -1,9 +1,9 @@
 import { Link } from 'react-router';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { categoryLabels } from '@/categories';
+import { categoryLabels } from '@bouture/shared';
 import { formatPrice } from '@/format';
-import type { Plant } from '@/types';
+import type { Plant } from '@bouture/shared';
 
 interface PlantCardProps {
   plant: Plant;

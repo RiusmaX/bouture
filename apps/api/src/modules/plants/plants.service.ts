@@ -1,13 +1,14 @@
 import { prisma } from '../../db.ts';
-import type { PlantInput, PlantListQuery, PlantPatch } from './plants.schemas.ts';
+import type { PlantInput, PlantListQuery, PlantPatch } from '@bouture/shared';
 import type { Prisma } from '../../generated/prisma/client.ts';
 
 // Le service porte l'accès aux données : les routes ne parlent jamais SQL ni Prisma directement.
 
-export async function listPlants({ category, search, page, pageSize }: PlantListQuery) {
+export async function listPlants({ category, search, inStock, page, pageSize }: PlantListQuery) {
   // Le filtre est un objet typé : l'éditeur propose les champs et les opérateurs
   const where: Prisma.PlantWhereInput = {
     category,
+    ...(inStock && { stock: { gt: 0 } }),
     ...(search && {
       OR: [
         { name: { contains: search, mode: 'insensitive' } },

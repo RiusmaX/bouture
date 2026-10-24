@@ -1,20 +1,20 @@
 import { ArrowLeftIcon } from 'lucide-react';
 import { Link, useParams } from 'react-router';
 import { Badge } from '@/components/ui/badge';
-import { categoryLabels } from '@/categories';
-import { plants } from '@/data/plants';
+import { categoryLabels } from '@bouture/shared';
+import { usePlant } from '@/api/plants';
+import { ErrorMessage, Loading } from '@/components/QueryState';
 import { formatPrice } from '@/format';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export function PlantDetailPage() {
   // Le paramètre :id de l'adresse /plants/:id, toujours une chaîne
   const { id } = useParams();
-  const plant = plants.find((p) => p.id === Number(id));
-  useDocumentTitle(plant?.name ?? 'Végétal introuvable');
+  const { data: plant, isPending, error } = usePlant(Number(id));
+  useDocumentTitle(plant?.name ?? 'Végétal');
 
-  if (!plant) {
-    return <p>Aucun végétal avec l'id {id}.</p>;
-  }
+  if (isPending) return <Loading />;
+  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div className="flex flex-col gap-4">

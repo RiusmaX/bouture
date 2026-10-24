@@ -7,7 +7,7 @@ import {
   plantPatchSchema,
   plantPageSchema,
   plantSchema,
-} from './plants.schemas.ts';
+} from '@bouture/shared';
 import { createPlant, deletePlant, findPlant, listPlants, updatePlant } from './plants.service.ts';
 
 // Les routes du catalogue. Le préfixe /plants est donné à l'enregistrement (app.ts).

@@ -1,4 +1,4 @@
-import type { Plant } from '@/types';
+import type { Plant } from '@bouture/shared';
 import { PlantCard } from './PlantCard';
 
 export function PlantGrid({ plants }: { plants: Plant[] }) {

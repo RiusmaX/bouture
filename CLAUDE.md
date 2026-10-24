@@ -5,13 +5,15 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 ## Structure
 
 - `apps/api` : API REST, Node.js, Fastify, Zod, Prisma (PostgreSQL).
-  - une fonctionnalité par dossier dans `src/modules/` : `*.schemas.ts` (Zod), `*.service.ts` (Prisma), `*.routes.ts` (Fastify).
+  - une fonctionnalité par dossier dans `src/modules/` : `*.service.ts` (Prisma), `*.routes.ts` (Fastify).
   - `prisma/schema.prisma` : le schéma de la base ; toute modification passe par une migration (`npm run db:migrate`).
   - `src/generated/` : client Prisma généré, ne jamais le modifier.
 - `apps/web` : interface React (Vite, TypeScript, Tailwind CSS, shadcn/ui).
   - imports par l'alias `@/` (dossier `src`), sans extension.
+  - appels à l'API : `src/lib/api.ts` (`apiFetch`) et un fichier par ressource dans `src/api/` (hooks TanStack Query). En développement, `/api` est relayé vers l'API par Vite.
   - `src/components/ui/` : composants shadcn/ui, ajoutés avec `npx shadcn@latest add <nom>`.
   - couleurs : uniquement les tokens sémantiques (`bg-primary`, `text-muted-foreground`…), jamais de couleur en dur. Tokens de marque dans `design/tokens.json`.
+- `packages/shared` : schémas Zod et types partagés par l'API et l'interface (`@bouture/shared`). Un champ qui change se modifie ici d'abord.
 - `exercises/` : exercices du jour 1, hors application. Ne pas modifier.
 
 ## Commandes (à la racine)

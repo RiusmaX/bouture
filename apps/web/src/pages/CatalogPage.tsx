@@ -1,35 +1,29 @@
 import { useState } from 'react';
+import type { Category } from '@bouture/shared';
+import { usePlants } from '@/api/plants';
 import { CategorySelect } from '@/components/CategorySelect';
 import { PlantGrid } from '@/components/PlantGrid';
+import { ErrorMessage, Loading } from '@/components/QueryState';
 import { SearchInput } from '@/components/SearchInput';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { useDebouncedValue } from '@/hooks/useDebouncedValue';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
-import { plants } from '@/data/plants';
-import type { Category } from '@/types';
-
-const normalize = (text: string) =>
-  text
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .toLowerCase();
 
 export function CatalogPage() {
-  // L'état : quand il change, React rappelle App et met l'écran à jour
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState<Category | ''>('');
   const [inStockOnly, setInStockOnly] = useState(false);
   const debouncedSearch = useDebouncedValue(search);
   useDocumentTitle('Catalogue');
 
-  // Valeur dérivée : calculée à chaque rendu, jamais stockée dans un état
-  const visible = plants.filter(
-    (plant) =>
-      normalize(plant.name).includes(normalize(debouncedSearch)) &&
-      (category === '' || plant.category === category) &&
-      (!inStockOnly || plant.stock > 0),
-  );
+  // Le filtre se fait maintenant côté serveur : chaque combinaison a sa clé de cache
+  const { data, isPending, error } = usePlants({
+    search: debouncedSearch || undefined,
+    category: category || undefined,
+    inStock: inStockOnly || undefined,
+    pageSize: 100,
+  });
 
   return (
     <div className="flex flex-col gap-6">
@@ -46,10 +40,18 @@ export function CatalogPage() {
           <Label htmlFor="in-stock">En stock seulement</Label>
         </div>
       </div>
-      <p className="text-sm text-muted-foreground">
-        {visible.length} {visible.length > 1 ? 'végétaux' : 'végétal'}
-      </p>
-      <PlantGrid plants={visible} />
+      {isPending ? (
+        <Loading />
+      ) : error ? (
+        <ErrorMessage error={error} />
+      ) : (
+        <>
+          <p className="text-sm text-muted-foreground">
+            {data.total} {data.total > 1 ? 'végétaux' : 'végétal'}
+          </p>
+          <PlantGrid plants={data.items} />
+        </>
+      )}
     </div>
   );
 }

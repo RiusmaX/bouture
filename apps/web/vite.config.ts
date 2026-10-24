@@ -9,4 +9,13 @@ export default defineConfig({
     // « @/components/ui/button » plutôt que « ../../components/ui/button »
     alias: { '@': path.resolve(import.meta.dirname, 'src') },
   },
+  server: {
+    // En développement, /api/... est relayé vers l'API : même origine, donc pas de CORS à gérer
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        rewrite: (url) => url.replace(/^\/api/, ''),
+      },
+    },
+  },
 });

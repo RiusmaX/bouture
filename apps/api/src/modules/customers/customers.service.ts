@@ -1,6 +1,6 @@
 import { prisma } from '../../db.ts';
 import type { Prisma } from '../../generated/prisma/client.ts';
-import type { CustomerInput, CustomerListQuery, CustomerPatch } from './customers.schemas.ts';
+import type { CustomerInput, CustomerListQuery, CustomerPatch } from '@bouture/shared';
 
 export async function listCustomers({ type, search, page, pageSize }: CustomerListQuery) {
   const where: Prisma.CustomerWhereInput = {
