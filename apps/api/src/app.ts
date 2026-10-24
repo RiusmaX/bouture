@@ -1,4 +1,5 @@
 import Fastify from 'fastify';
+import rateLimit from '@fastify/rate-limit';
 import sensible from '@fastify/sensible';
 import swagger from '@fastify/swagger';
 import swaggerUi from '@fastify/swagger-ui';
@@ -10,8 +11,11 @@ import {
 } from 'fastify-type-provider-zod';
 import { config } from './config.ts';
 import { prisma } from './db.ts';
+import { authRoutes } from './modules/auth/auth.routes.ts';
 import { customerRoutes } from './modules/customers/customers.routes.ts';
 import { plantRoutes } from './modules/plants/plants.routes.ts';
+import { userRoutes } from './modules/users/users.routes.ts';
+import { authPlugin } from './plugins/auth.ts';
 
 // Construit l'application sans la démarrer : les tests pourront l'utiliser sans ouvrir de port.
 export async function buildApp() {
@@ -23,6 +27,9 @@ export async function buildApp() {
 
   // app.httpErrors.notFound(), badRequest()… : des erreurs HTTP prêtes à l'emploi
   await app.register(sensible);
+  // Limitation de débit : active seulement sur les routes qui la demandent (connexion)
+  await app.register(rateLimit, { global: false });
+  await app.register(authPlugin);
 
   // La documentation OpenAPI est générée à partir des schémas Zod des routes
   await app.register(swagger, {
@@ -35,6 +42,8 @@ export async function buildApp() {
   app.addHook('onClose', () => prisma.$disconnect());
 
   // Une fonctionnalité = un plugin, monté sous son préfixe
+  await app.register(authRoutes, { prefix: '/auth' });
+  await app.register(userRoutes, { prefix: '/users' });
   await app.register(plantRoutes, { prefix: '/plants' });
   await app.register(customerRoutes, { prefix: '/customers' });
 

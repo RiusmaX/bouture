@@ -7,6 +7,9 @@ const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   HOST: z.string().default('localhost'),
   DATABASE_URL: z.url(),
+  // Secret de signature des jetons : long, aléatoire, différent dans chaque environnement
+  JWT_SECRET: z.string().min(32),
+  COOKIE_SECURE: z.stringbool().default(false),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 });
 
@@ -17,4 +20,6 @@ export const config = {
   host: env.HOST,
   logLevel: env.LOG_LEVEL,
   databaseUrl: env.DATABASE_URL,
+  jwtSecret: env.JWT_SECRET,
+  cookieSecure: env.COOKIE_SECURE,
 };

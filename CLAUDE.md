@@ -34,6 +34,13 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 - Les prix sont des entiers en centimes (`priceCents`).
 - La configuration passe par les variables d'environnement (`.env`, jamais commité ; `.env.example` à jour).
 
+## Sécurité
+
+- Toutes les routes de l'API demandent une connexion (`app.authenticate`), sauf `/auth/login`. Les suppressions sont réservées au rôle `admin` (`app.requireRole('admin')`).
+- Le jeton JWT voyage dans un cookie httpOnly, jamais dans le stockage du navigateur.
+- Les schémas de réponse filtrent les champs : `passwordHash` ne sort jamais de l'API.
+- Comptes de démonstration (seed) : `admin@bouture.example` / `bouture-admin`, `vente@bouture.example` / `bouture-vente`.
+
 ## Façon de travailler
 
 - Avant de coder, propose un plan court et attends la validation.

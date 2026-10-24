@@ -12,6 +12,9 @@ import { createPlant, deletePlant, findPlant, listPlants, updatePlant } from './
 
 // Les routes du catalogue. Le préfixe /plants est donné à l'enregistrement (app.ts).
 export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
+  // Toutes les routes de ce plugin demandent un utilisateur connecté
+  app.addHook('onRequest', app.authenticate);
+
   // GET /plants?category=hedge&search=laurier&page=1&pageSize=20
   app.get(
     '/',
@@ -83,6 +86,8 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
   app.delete(
     '/:id',
     {
+      // Supprimer est réservé aux administrateurs
+      onRequest: [app.requireRole('admin')],
       schema: {
         tags: ['plants'],
         summary: 'Supprime un végétal',

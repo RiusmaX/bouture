@@ -18,6 +18,9 @@ import {
 } from './customers.service.ts';
 
 export const customerRoutes: FastifyPluginAsyncZod = async (app) => {
+  // Toutes les routes de ce plugin demandent un utilisateur connecté
+  app.addHook('onRequest', app.authenticate);
+
   const notFound = (id: number) => app.httpErrors.notFound(`Aucun client avec l'id ${id}`);
 
   app.get(
@@ -97,6 +100,8 @@ export const customerRoutes: FastifyPluginAsyncZod = async (app) => {
   app.delete(
     '/:id',
     {
+      // Supprimer est réservé aux administrateurs
+      onRequest: [app.requireRole('admin')],
       schema: {
         tags: ['customers'],
         summary: 'Supprime un client',

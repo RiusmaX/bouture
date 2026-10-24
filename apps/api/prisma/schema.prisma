@@ -54,3 +54,20 @@ model Customer {
 
   @@map("customers")
 }
+
+enum Role {
+  admin
+  seller
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(254)
+  name         String   @db.VarChar(120)
+  // Jamais le mot de passe en clair : seulement son empreinte (scrypt, avec sel)
+  passwordHash String   @map("password_hash")
+  role         Role
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}

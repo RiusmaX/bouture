@@ -10,8 +10,16 @@ GET https://geo.api.gouv.fr/communes/44071
 ### TD 4 · Une ressource qui n'existe pas : quel code de statut ?
 GET https://geo.api.gouv.fr/communes/99999
 
-### Bouture · le catalogue (à partir du TD 5)
+### Bouture · se connecter (à partir du TD 14, toutes les routes le demandent)
+# REST Client garde le cookie reçu et le renvoie avec les requêtes suivantes.
 @api = http://localhost:3000
+
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@bouture.example", "password": "bouture-admin" }
+
+### Bouture · le catalogue (à partir du TD 5)
 
 GET {{api}}/plants?category=hedge&page=1&pageSize=5
 

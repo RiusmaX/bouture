@@ -1,15 +1,22 @@
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { buildApp } from '../src/app.ts';
+import { login, SELLER } from './helpers.ts';
 
 // app.inject simule une requête HTTP sans ouvrir de port : rapide et sans réseau
 const app = await buildApp();
 
-beforeAll(() => app.ready());
+// En-têtes d'un administrateur connecté, joints à chaque requête
+let headers: { cookie: string };
+
+beforeAll(async () => {
+  await app.ready();
+  headers = await login(app);
+});
 afterAll(() => app.close());
 
 describe('GET /plants', () => {
   it('renvoie la première page du catalogue', async () => {
-    const response = await app.inject({ method: 'GET', url: '/plants' });
+    const response = await app.inject({ headers, method: 'GET', url: '/plants' });
 
     expect(response.statusCode).toBe(200);
     const body = response.json();
@@ -18,7 +25,7 @@ describe('GET /plants', () => {
   });
 
   it('filtre par catégorie', async () => {
-    const response = await app.inject({ method: 'GET', url: '/plants?category=hedge' });
+    const response = await app.inject({ headers, method: 'GET', url: '/plants?category=hedge' });
 
     const body = response.json();
     expect(body.total).toBe(4);
@@ -28,19 +35,23 @@ describe('GET /plants', () => {
   });
 
   it('trie par prix décroissant', async () => {
-    const response = await app.inject({ method: 'GET', url: '/plants?sort=priceCents&order=desc' });
+    const response = await app.inject({
+      headers,
+      method: 'GET',
+      url: '/plants?sort=priceCents&order=desc',
+    });
 
     expect(response.json().items[0].name).toBe('Olivier');
   });
 
   it('refuse un tri sur une colonne inconnue', async () => {
-    const response = await app.inject({ method: 'GET', url: '/plants?sort=password' });
+    const response = await app.inject({ headers, method: 'GET', url: '/plants?sort=password' });
 
     expect(response.statusCode).toBe(400);
   });
 
   it('refuse une catégorie inconnue', async () => {
-    const response = await app.inject({ method: 'GET', url: '/plants?category=cactus' });
+    const response = await app.inject({ headers, method: 'GET', url: '/plants?category=cactus' });
 
     expect(response.statusCode).toBe(400);
   });
@@ -48,7 +59,7 @@ describe('GET /plants', () => {
 
 describe('GET /plants/:id', () => {
   it('renvoie 404 si le végétal n’existe pas', async () => {
-    const response = await app.inject({ method: 'GET', url: '/plants/9999' });
+    const response = await app.inject({ headers, method: 'GET', url: '/plants/9999' });
 
     expect(response.statusCode).toBe(404);
     expect(response.json().message).toContain('9999');
@@ -58,6 +69,7 @@ describe('GET /plants/:id', () => {
 describe('POST /plants', () => {
   it('crée un végétal puis le retrouve', async () => {
     const created = await app.inject({
+      headers,
       method: 'POST',
       url: '/plants',
       payload: {
@@ -72,12 +84,13 @@ describe('POST /plants', () => {
 
     expect(created.statusCode).toBe(201);
     const { id } = created.json();
-    const found = await app.inject({ method: 'GET', url: `/plants/${id}` });
+    const found = await app.inject({ headers, method: 'GET', url: `/plants/${id}` });
     expect(found.json().name).toBe('Sauge officinale');
   });
 
   it('refuse un prix négatif', async () => {
     const response = await app.inject({
+      headers,
       method: 'POST',
       url: '/plants',
       payload: {
@@ -91,5 +104,20 @@ describe('POST /plants', () => {
     });
 
     expect(response.statusCode).toBe(400);
+  });
+});
+
+describe('Accès', () => {
+  it('refuse un visiteur non connecté (401)', async () => {
+    const response = await app.inject({ method: 'GET', url: '/plants' });
+
+    expect(response.statusCode).toBe(401);
+  });
+
+  it('refuse la suppression à un vendeur (403)', async () => {
+    const seller = await login(app, SELLER);
+    const response = await app.inject({ headers: seller, method: 'DELETE', url: '/plants/1' });
+
+    expect(response.statusCode).toBe(403);
   });
 });

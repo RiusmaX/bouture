@@ -1,3 +1,4 @@
+import type { Role } from './auth.ts';
 import type { Category } from './plants.ts';
 import type { CustomerType } from './customers.ts';
 
@@ -15,4 +16,9 @@ export const categoryLabels: Record<Category, string> = {
 export const customerTypeLabels: Record<CustomerType, string> = {
   professional: 'Professionnel',
   private: 'Particulier',
+};
+
+export const roleLabels: Record<Role, string> = {
+  admin: 'Administrateur',
+  seller: 'Vendeur',
 };
