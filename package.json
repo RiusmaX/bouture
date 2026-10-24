@@ -12,6 +12,9 @@
     "node": ">=24"
   },
   "scripts": {
+    "db:up": "docker compose up -d",
+    "db:migrate": "npm run db:migrate -w @bouture/api",
+    "db:seed": "npm run db:seed -w @bouture/api",
     "dev:api": "npm run dev -w @bouture/api",
     "lint": "eslint .",
     "format": "prettier --write .",

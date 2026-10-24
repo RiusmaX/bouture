@@ -4,11 +4,16 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 
 ## Structure
 
-- `apps/api` : API REST, Node.js et TypeScript.
+- `apps/api` : API REST, Node.js, Fastify, Zod, Prisma (PostgreSQL).
+  - une fonctionnalité par dossier dans `src/modules/` : `*.schemas.ts` (Zod), `*.service.ts` (Prisma), `*.routes.ts` (Fastify).
+  - `prisma/schema.prisma` : le schéma de la base ; toute modification passe par une migration (`npm run db:migrate`).
+  - `src/generated/` : client Prisma généré, ne jamais le modifier.
 - `exercises/` : exercices du jour 1, hors application. Ne pas modifier.
 
 ## Commandes (à la racine)
 
+- `npm run db:up` : démarre PostgreSQL (Docker).
+- `npm run db:migrate` puis `npm run db:seed` : crée les tables et les données de démonstration.
 - `npm run dev:api` : lance l'API en mode surveillance.
 - `npm run typecheck` : vérifie les types de tous les paquets.
 - `npm run lint` et `npm run format` : ESLint et Prettier.

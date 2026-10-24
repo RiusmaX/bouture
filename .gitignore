@@ -4,3 +4,5 @@ coverage/
 .env
 *.log
 .DS_Store
+# Client Prisma : régénéré par npm install (postinstall)
+apps/api/src/generated/

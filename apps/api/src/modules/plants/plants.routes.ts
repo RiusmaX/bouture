@@ -8,7 +8,7 @@ import {
   plantPageSchema,
   plantSchema,
 } from './plants.schemas.ts';
-import { createPlant, deletePlant, findPlant, listPlants, updatePlant } from './plants.store.ts';
+import { createPlant, deletePlant, findPlant, listPlants, updatePlant } from './plants.service.ts';
 
 // Les routes du catalogue. Le préfixe /plants est donné à l'enregistrement (app.ts).
 export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
@@ -24,7 +24,7 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     // request.query est déjà validé et typé : page est un nombre, category une valeur connue
-    async (request) => listPlants(request.query),
+    (request) => listPlants(request.query),
   );
 
   // GET /plants/10
@@ -39,7 +39,7 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request) => {
-      const plant = findPlant(request.params.id);
+      const plant = await findPlant(request.params.id);
       // Une erreur levée devient une réponse 404 au format { statusCode, error, message }
       if (!plant) throw app.httpErrors.notFound(`Aucun végétal avec l'id ${request.params.id}`);
       return plant;
@@ -57,7 +57,7 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
         response: { 201: plantSchema },
       },
     },
-    async (request, reply) => reply.code(201).send(createPlant(request.body)),
+    async (request, reply) => reply.code(201).send(await createPlant(request.body)),
   );
 
   // PATCH /plants/10 : on n'envoie que les champs à changer
@@ -73,7 +73,7 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request) => {
-      const plant = updatePlant(request.params.id, request.body);
+      const plant = await updatePlant(request.params.id, request.body);
       if (!plant) throw app.httpErrors.notFound(`Aucun végétal avec l'id ${request.params.id}`);
       return plant;
     },
@@ -91,7 +91,7 @@ export const plantRoutes: FastifyPluginAsyncZod = async (app) => {
       },
     },
     async (request, reply) => {
-      if (!deletePlant(request.params.id)) {
+      if (!(await deletePlant(request.params.id))) {
         throw app.httpErrors.notFound(`Aucun végétal avec l'id ${request.params.id}`);
       }
       return reply.code(204).send(null);

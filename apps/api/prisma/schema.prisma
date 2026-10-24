@@ -1,0 +1,38 @@
+// Schéma de la base : Prisma en tire les migrations SQL et un client typé.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  importFileExtension = "ts"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Category {
+  tree
+  shrub
+  perennial
+  climber
+  hedge
+  fruit
+  aromatic
+}
+
+model Plant {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(120)
+  latinName  String   @map("latin_name") @db.VarChar(120)
+  category   Category
+  potSize    String   @map("pot_size") @db.VarChar(30)
+  priceCents Int      @map("price_cents")
+  stock      Int      @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  // Index pour les filtres les plus fréquents
+  @@index([category])
+  // En base, les noms suivent la convention SQL (snake_case, pluriel)
+  @@map("plants")
+}

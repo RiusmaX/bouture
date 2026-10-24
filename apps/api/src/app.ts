@@ -9,6 +9,7 @@ import {
   type ZodTypeProvider,
 } from 'fastify-type-provider-zod';
 import { config } from './config.ts';
+import { prisma } from './db.ts';
 import { plantRoutes } from './modules/plants/plants.routes.ts';
 
 // Construit l'application sans la démarrer : les tests pourront l'utiliser sans ouvrir de port.
@@ -28,6 +29,9 @@ export async function buildApp() {
     transform: jsonSchemaTransform,
   });
   await app.register(swaggerUi, { routePrefix: '/docs' });
+
+  // À l'arrêt de l'API, on ferme proprement les connexions à la base
+  app.addHook('onClose', () => prisma.$disconnect());
 
   // Une fonctionnalité = un plugin, monté sous son préfixe
   await app.register(plantRoutes, { prefix: '/plants' });

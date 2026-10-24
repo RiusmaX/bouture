@@ -6,6 +6,7 @@ import { z } from 'zod';
 const envSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3000),
   HOST: z.string().default('localhost'),
+  DATABASE_URL: z.url(),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
 });
 
@@ -15,4 +16,5 @@ export const config = {
   port: env.PORT,
   host: env.HOST,
   logLevel: env.LOG_LEVEL,
+  databaseUrl: env.DATABASE_URL,
 };
