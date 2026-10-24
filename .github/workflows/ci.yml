@@ -37,10 +37,12 @@ jobs:
       - run: npm test
       - run: npm run build -w @bouture/web
 
-  # Déploiement : seulement sur main, et seulement si les vérifications sont passées
+  # Déploiement : seulement sur main, si les vérifications sont passées,
+  # et si la variable DEPLOY_ENABLED vaut true (Settings, Variables) : un fork ou un dépôt
+  # sans serveur de recette reste au vert.
   deploy:
     needs: check
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     # Les secrets sont rangés dans l'environnement « recette » du dépôt GitHub
     environment: recette

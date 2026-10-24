@@ -26,7 +26,7 @@ Caddy obtient le certificat HTTPS au premier accès au domaine.
 ## À chaque fusion sur main
 
 La CI (`.github/workflows/ci.yml`) vérifie le code puis se connecte au serveur en SSH pour le mettre à jour.
-Dans le dépôt GitHub, créer l'environnement `recette` (Settings, Environments) avec trois secrets :
+Dans le dépôt GitHub, créer la variable `DEPLOY_ENABLED` à `true` (Settings, Secrets and variables, Actions, onglet Variables), puis l'environnement `recette` (Settings, Environments) avec trois secrets :
 
 | Secret        | Contenu                                                                                                     |
 | ------------- | ----------------------------------------------------------------------------------------------------------- |
