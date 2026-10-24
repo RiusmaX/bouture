@@ -38,6 +38,9 @@ export const plantListQuerySchema = paginationQuerySchema.extend({
   search: z.string().trim().min(1).optional(),
   // « true » dans l'adresse : seulement les végétaux disponibles
   inStock: z.stringbool().optional(),
+  // Tri : une liste fermée de colonnes, jamais un nom de colonne libre venu de l'adresse
+  sort: z.enum(['name', 'priceCents', 'stock']).default('name'),
+  order: z.enum(['asc', 'desc']).default('asc'),
 });
 
 export const plantPageSchema = pageSchema(plantSchema);
@@ -51,3 +54,5 @@ export type Plant = z.infer<typeof plantSchema>;
 export type PlantInput = z.infer<typeof plantInputSchema>;
 export type PlantPatch = z.infer<typeof plantPatchSchema>;
 export type PlantListQuery = z.infer<typeof plantListQuerySchema>;
+export type PlantSort = PlantListQuery['sort'];
+export type SortOrder = PlantListQuery['order'];

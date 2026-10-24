@@ -25,7 +25,8 @@ export function withQuery(path: string, query: Record<string, QueryValue> = {}) 
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
   const response = await fetch(`/api${path}`, {
     ...init,
-    headers: { 'Content-Type': 'application/json', ...init.headers },
+    // On n'annonce du JSON que si on en envoie : un DELETE sans corps serait refusé (400)
+    headers: init.body ? { 'Content-Type': 'application/json', ...init.headers } : init.headers,
   });
   // fetch ne lève pas d'erreur sur un 404 ou un 500 : c'est à nous de regarder response.ok
   if (!response.ok) {

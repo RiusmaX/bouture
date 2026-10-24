@@ -27,6 +27,18 @@ describe('GET /plants', () => {
     );
   });
 
+  it('trie par prix décroissant', async () => {
+    const response = await app.inject({ method: 'GET', url: '/plants?sort=priceCents&order=desc' });
+
+    expect(response.json().items[0].name).toBe('Olivier');
+  });
+
+  it('refuse un tri sur une colonne inconnue', async () => {
+    const response = await app.inject({ method: 'GET', url: '/plants?sort=password' });
+
+    expect(response.statusCode).toBe(400);
+  });
+
   it('refuse une catégorie inconnue', async () => {
     const response = await app.inject({ method: 'GET', url: '/plants?category=cactus' });
 

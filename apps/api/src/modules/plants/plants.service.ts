@@ -4,7 +4,15 @@ import type { Prisma } from '../../generated/prisma/client.ts';
 
 // Le service porte l'accès aux données : les routes ne parlent jamais SQL ni Prisma directement.
 
-export async function listPlants({ category, search, inStock, page, pageSize }: PlantListQuery) {
+export async function listPlants({
+  category,
+  search,
+  inStock,
+  sort,
+  order,
+  page,
+  pageSize,
+}: PlantListQuery) {
   // Le filtre est un objet typé : l'éditeur propose les champs et les opérateurs
   const where: Prisma.PlantWhereInput = {
     category,
@@ -20,7 +28,8 @@ export async function listPlants({ category, search, inStock, page, pageSize }: 
   const [items, total] = await prisma.$transaction([
     prisma.plant.findMany({
       where,
-      orderBy: { name: 'asc' },
+      // L'id départage les égalités : l'ordre reste stable d'une page à l'autre
+      orderBy: [{ [sort]: order }, { id: 'asc' }],
       skip: (page - 1) * pageSize,
       take: pageSize,
     }),
