@@ -42,6 +42,11 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 - Les schémas de réponse filtrent les champs : `passwordHash` ne sort jamais de l'API.
 - Comptes de démonstration (seed) : `admin@bouture.example` / `bouture-admin`, `vente@bouture.example` / `bouture-vente`.
 
+## Git
+
+- Jamais de commit sur `main` : une branche par changement (`feat/…`, `fix/…`), puis une pull request. Détail dans `CONTRIBUTING.md`.
+- Messages de commit en français, à l'impératif, une ligne claire.
+
 ## Façon de travailler
 
 - Avant de coder, propose un plan court et attends la validation.
