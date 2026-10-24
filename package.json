@@ -18,7 +18,8 @@
     "dev:api": "npm run dev -w @bouture/api",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

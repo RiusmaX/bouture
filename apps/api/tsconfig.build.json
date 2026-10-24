@@ -1,0 +1,10 @@
+{
+  // Compilation pour la production : seulement src, vers dist
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "types": ["node"]
+  },
+  "include": ["src"]
+}

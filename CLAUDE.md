@@ -16,6 +16,7 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 - `npm run db:migrate` puis `npm run db:seed` : crée les tables et les données de démonstration.
 - `npm run dev:api` : lance l'API en mode surveillance.
 - `npm run typecheck` : vérifie les types de tous les paquets.
+- `npm test` : lance les tests (Vitest), sur la base `bouture_test` (voir `apps/api/.env.test`).
 - `npm run lint` et `npm run format` : ESLint et Prettier.
 
 ## Conventions
@@ -30,4 +31,6 @@ Gestion de pépinière : catalogue de végétaux, clients, commandes. Monorepo n
 
 - Avant de coder, propose un plan court et attends la validation.
 - Petits changements, une fonctionnalité à la fois. Explique le code produit en quelques lignes.
-- Lance `npm run typecheck` et `npm run lint` avant de dire qu'une tâche est finie.
+- Toute route nouvelle a ses tests (`apps/api/test/`, avec `app.inject`).
+- Lance `npm run typecheck`, `npm run lint` et `npm test` avant de dire qu'une tâche est finie.
+- Ne lance jamais de commande destructrice sur une base (`prisma migrate reset`, `DROP`) sans demander.
