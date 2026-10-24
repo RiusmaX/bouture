@@ -1,57 +1,60 @@
-// TD 1 · Manipuler le catalogue de végétaux en JavaScript
-// Complète chaque fonction, puis lance `npm run td1` dans le dossier exercises.
-// Les tests (catalog.test.js) te disent ce qui est attendu.
+// TD 1 · Manipuler le catalogue de végétaux en JavaScript (corrigé)
 
 import { readFile } from 'node:fs/promises';
 
-// 1. Formate un prix en centimes : 4590 → « 45,90 € »
-//    Indice : Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' })
+// Un seul formateur, créé une fois et réutilisé : c'est plus rapide que d'en créer un par appel
+const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+
+// 1. Les prix sont stockés en centimes (des entiers) pour éviter les erreurs d'arrondi des décimaux
 export function formatPrice(priceCents) {
-  throw new Error('À compléter');
+  return euros.format(priceCents / 100);
 }
 
-// 2. Les noms des végétaux, dans le même ordre (map)
+// 2. map transforme chaque élément et renvoie un nouveau tableau de même longueur
 export function names(plants) {
-  throw new Error('À compléter');
+  return plants.map((plant) => plant.name);
 }
 
-// 3. Les végétaux disponibles, ceux dont le stock est supérieur à 0 (filter)
+// 3. filter garde les éléments pour lesquels la fonction renvoie true
 export function inStock(plants) {
-  throw new Error('À compléter');
+  return plants.filter((plant) => plant.stock > 0);
 }
 
-// 4. Le végétal qui porte cet identifiant, ou undefined (find)
+// 4. find renvoie le premier élément trouvé, ou undefined
 export function findById(plants, id) {
-  throw new Error('À compléter');
+  return plants.find((plant) => plant.id === id);
 }
 
-// 5. La valeur du stock en centimes : somme de prix × stock (reduce)
+// 5. reduce fait tenir tout le tableau dans une seule valeur, ici une somme qui part de 0
 export function stockValue(plants) {
-  throw new Error('À compléter');
+  return plants.reduce((total, plant) => total + plant.priceCents * plant.stock, 0);
 }
 
-// 6. Le nombre de végétaux par catégorie : { tree: 4, shrub: 5, … } (reduce)
+// 6. reduce peut aussi construire un objet : la clé est la catégorie, la valeur un compteur
 export function countByCategory(plants) {
-  throw new Error('À compléter');
+  return plants.reduce((counts, plant) => {
+    counts[plant.category] = (counts[plant.category] ?? 0) + 1;
+    return counts;
+  }, {});
 }
 
-// 7. Une copie triée du prix le plus bas au plus haut, sans modifier le tableau reçu
+// 7. toSorted (ES2023) renvoie une copie triée ; sort, lui, modifierait le tableau reçu
 export function sortByPrice(plants) {
-  throw new Error('À compléter');
+  return plants.toSorted((a, b) => a.priceCents - b.priceCents);
 }
 
-// 8. Une phrase de présentation avec la déstructuration et un gabarit de chaîne :
-//    « Lavande vraie (Lavandula angustifolia), pot C2 »
-export function describe(plant) {
-  throw new Error('À compléter');
+// 8. La déstructuration sort les champs utiles dès les paramètres
+export function describe({ name, latinName, potSize }) {
+  return `${name} (${latinName}), pot ${potSize}`;
 }
 
-// 9. Une copie de chaque végétal avec un champ priceLabel en plus (décomposition ...)
+// 9. { ...plant } copie l'objet : on ajoute un champ sans toucher à l'original
 export function withPriceLabel(plants) {
-  throw new Error('À compléter');
+  return plants.map((plant) => ({ ...plant, priceLabel: formatPrice(plant.priceCents) }));
 }
 
-// 10. Lit le fichier JSON du catalogue et renvoie le tableau (async / await)
+// 10. readFile renvoie une promesse : await attend le contenu sans bloquer Node
 export async function loadCatalog(path) {
-  throw new Error('À compléter');
+  const text = await readFile(path, 'utf8');
+  return JSON.parse(text);
 }

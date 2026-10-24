@@ -1,57 +1,75 @@
-// TD 2 · Typer le catalogue de végétaux
-// Deux commandes, dans le dossier exercises :
-//   npm run typecheck   → TypeScript vérifie les types (aucune erreur attendue à la fin)
-//   npm run td2         → Node exécute les tests (il efface les types, sans les vérifier)
+// TD 2 · Typer le catalogue de végétaux (corrigé)
 
 import plantsJson from '../data/plants.json' with { type: 'json' };
 
-// 1. Les catégories possibles, en type union de chaînes (pas d'enum : Node ne sait pas l'effacer)
-//    tree, shrub, perennial, climber, hedge, fruit, aromatic
-export type Category = string; // À remplacer
+// 1. Une union de chaînes : l'éditeur propose les valeurs, et une faute de frappe est refusée
+export type Category = 'tree' | 'shrub' | 'perennial' | 'climber' | 'hedge' | 'fruit' | 'aromatic';
 
-// 2. Un végétal du catalogue : id, name, latinName, category, potSize, priceCents, stock
+// 2. L'interface décrit la forme d'un objet ; elle disparaît à l'exécution
 export interface Plant {
   id: number;
-  // À compléter
+  name: string;
+  latinName: string;
+  category: Category;
+  potSize: string;
+  priceCents: number;
+  stock: number;
 }
 
-// 3. Ce qu'on envoie pour créer un végétal : tout sauf l'id (type utilitaire Omit)
-export type PlantDraft = unknown; // À remplacer
+// 3. Omit retire des champs d'un type existant : pas de copie à maintenir
+export type PlantDraft = Omit<Plant, 'id'>;
 
-// 4. Ce qu'on envoie pour modifier un végétal : tous les champs du brouillon, facultatifs (Partial)
-export type PlantPatch = unknown; // À remplacer
+// 4. Partial rend tous les champs facultatifs
+export type PlantPatch = Partial<PlantDraft>;
 
-// 5. Le résultat d'une opération qui peut échouer, générique :
-//    { ok: true, value: T } ou { ok: false, error: string } (union discriminée par ok)
-export type Result<T> = unknown; // À remplacer
+// 5. Union discriminée : en testant ok, TypeScript sait si value ou error existe
+export type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 
-// Le JSON n'a pas de type précis : on l'affirme une seule fois, ici
 export const plants = plantsJson as Plant[];
 
-// 6. Type les paramètres et le retour, puis complète
-export function byCategory(list, category) {
-  throw new Error('À compléter');
+// 6. Paramètres et retour typés : l'appelant ne peut plus passer une catégorie inventée
+export function byCategory(list: Plant[], category: Category): Plant[] {
+  return list.filter((plant) => plant.category === category);
 }
 
-// 7. Crée un végétal à partir d'un brouillon : l'id est le plus grand id + 1.
-//    Refuse un prix négatif ou un nom vide avec un Result en erreur.
+// 7. Les règles métier renvoient une erreur plutôt que de lever une exception
 export function createPlant(list: Plant[], draft: PlantDraft): Result<Plant> {
-  throw new Error('À compléter');
+  if (draft.name.trim() === '') return { ok: false, error: 'Le nom est obligatoire' };
+  if (draft.priceCents < 0) return { ok: false, error: 'Le prix ne peut pas être négatif' };
+  const id = Math.max(0, ...list.map((plant) => plant.id)) + 1;
+  return { ok: true, value: { id, ...draft } };
 }
 
-// 8. Applique une modification partielle. Erreur si l'id n'existe pas.
+// 8. On renvoie une copie modifiée : la liste et l'objet d'origine restent intacts
 export function updatePlant(list: Plant[], id: number, patch: PlantPatch): Result<Plant> {
-  throw new Error('À compléter');
+  const plant = list.find((p) => p.id === id);
+  if (!plant) return { ok: false, error: `Aucun végétal avec l'id ${id}` };
+  return { ok: true, value: { ...plant, ...patch } };
 }
 
-// 9. Générique : regroupe n'importe quelle liste selon une clé calculée
-//    groupBy(plants, (p) => p.category) → { tree: [...], shrub: [...] }
+// 9. Les génériques T et K sont déduits à l'appel : groupBy(plants, (p) => p.category)
 export function groupBy<T, K extends string>(list: T[], key: (item: T) => K): Record<K, T[]> {
-  throw new Error('À compléter');
+  const groups = {} as Record<K, T[]>;
+  for (const item of list) {
+    const k = key(item);
+    (groups[k] ??= []).push(item);
+  }
+  return groups;
 }
 
-// 10. Le libellé français d'une catégorie. Le switch doit couvrir tous les cas :
-//     si on ajoute une catégorie au type, TypeScript doit signaler ce switch.
+// 10. Le cas default affecte la valeur à never : il ne compile que si tous les cas sont traités
 export function categoryLabel(category: Category): string {
-  throw new Error('À compléter');
+  switch (category) {
+    case 'tree': return 'Arbre';
+    case 'shrub': return 'Arbuste';
+    case 'perennial': return 'Vivace';
+    case 'climber': return 'Grimpante';
+    case 'hedge': return 'Haie';
+    case 'fruit': return 'Fruitier';
+    case 'aromatic': return 'Aromatique';
+    default: {
+      const unreachable: never = category;
+      return unreachable;
+    }
+  }
 }
